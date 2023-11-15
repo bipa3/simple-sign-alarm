@@ -26,6 +26,9 @@ public class AlarmController {
 
     public int getOrgUserId(HttpSession session){
         Object orgUserId1 = redisService.getValueFromHash(session.getId(), "orgUserId");
+        System.out.println("redis session: "+ session.getId());
+        System.out.println("redisServiceAllValue: " + redisService.getAllValuesFromHash(session.getId()));
+        System.out.println("orgUserId:" + orgUserId1);
         return Integer.parseInt((String) orgUserId1);
     }
 
