@@ -29,14 +29,13 @@ public class AlarmController {
     private RedisService redisService;
 
     public int getOrgUserId(HttpServletRequest request){
-        int authorityCode = (SessionUtils.getAttribute("authorityCode") != null) ? (int) SessionUtils.getAttribute("authorityCode") : 3;
+//        int authorityCode = (SessionUtils.getAttribute("authorityCode") != null) ? (int) SessionUtils.getAttribute("authorityCode") : 3;
         List<String> cookieHeaderValues = Collections.list(request.getHeaders("Cookie"))
                 .stream()
                 .flatMap(cookieHeader -> Arrays.stream(cookieHeader.split(";")))
                 .map(String::trim)
                 .collect(Collectors.toList());
 
-        //System.out.println(cookieHeaderValues.get(0) + cookieHeaderValues.get(1) + cookieHeaderValues.get(2));
         String JSESSIONID = "";
         for(String value: cookieHeaderValues) {
             if(value.contains("JSESSIONID")) {
@@ -44,9 +43,6 @@ public class AlarmController {
             }
         }
         Object orgUserId1 = redisService.getValueFromHash(JSESSIONID, "orgUserId");
-        System.out.println("redis session: "+ JSESSIONID);
-        System.out.println("redisServiceAllValue: " + redisService.getAllValuesFromHash(JSESSIONID));
-        System.out.println("orgUserId:" + orgUserId1);
         return Integer.parseInt((String) orgUserId1);
     }
 
@@ -57,7 +53,6 @@ public class AlarmController {
 
     @GetMapping("/")
     public List<AlarmDTO> getAlarm(HttpServletRequest request){
-        System.out.println("alarm controller : " + RequestContextHolder.getRequestAttributes().getSessionId());
         //int orgUserId = (int) SessionUtils.getAttribute("orgUserId");
         int orgUserId = this.getOrgUserId(request);
         List<AlarmDTO> alarmDTO = alarmService.selectAlarm(orgUserId);
@@ -67,7 +62,6 @@ public class AlarmController {
     @GetMapping("/count")
     public int alarmCount(HttpServletRequest request){
         int orgUserId = this.getOrgUserId(request);
-        //int orgUserId = (int) SessionUtils.getAttribute("orgUserId");
         return alarmService.alarmCount(orgUserId);
     }
 
