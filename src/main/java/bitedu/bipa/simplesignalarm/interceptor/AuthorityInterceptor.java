@@ -36,7 +36,12 @@
                     .collect(Collectors.toList());
 
             //System.out.println(cookieHeaderValues.get(0) + cookieHeaderValues.get(1) + cookieHeaderValues.get(2));
-            String JSESSIONID = cookieHeaderValues.get(1).substring(cookieHeaderValues.get(1).indexOf("=") + 1);
+            for(String value: cookieHeaderValues) {
+                if(value.contains("JSESSIONID")) {
+                    String JSESSIONID = value.substring(value.indexOf("=")+1);
+                    System.out.println(JSESSIONID);
+                }
+            }
             //SessionUtils sessionUtils = new SessionUtils();
             //System.out.println(sessionUtils.getSession(JSESSIONID));
             //System.out.println("url:" + request.getRequestURI() + "  authorityCode:" + authorityCode + " headers: " + cookieHeaderValues);
