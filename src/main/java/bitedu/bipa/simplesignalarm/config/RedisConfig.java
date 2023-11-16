@@ -63,7 +63,7 @@ public class RedisConfig {
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        RedisTemplate template = new RedisTemplate();
         template.setConnectionFactory(connectionFactory);
         // Key와 Value의 직렬화 및 역직렬화 설정
         template.setKeySerializer(new StringRedisSerializer());
