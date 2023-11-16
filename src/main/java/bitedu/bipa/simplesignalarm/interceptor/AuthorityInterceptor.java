@@ -2,11 +2,6 @@
 
     import bitedu.bipa.simplesignalarm.mapper.AuthorityMapper;
     import bitedu.bipa.simplesignalarm.utils.SessionUtils;
-    import bitedu.bipa.simplesignbackend.mapper.AuthorityMapper;
-    import bitedu.bipa.simplesignbackend.model.dto.RoleRequestDTO;
-    import bitedu.bipa.simplesignbackend.utils.SessionUtils;
-    import bitedu.bipa.simplesignbackend.validation.CustomErrorCode;
-    import bitedu.bipa.simplesignbackend.validation.RestApiException;
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.stereotype.Component;
     import org.springframework.web.method.HandlerMethod;
