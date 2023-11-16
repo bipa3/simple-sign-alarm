@@ -48,6 +48,7 @@ public class AlarmController {
 
     @PostMapping("/createNewAlarm")
     public void createNewAlarm(@RequestBody AlarmResDTO alarmResDTO){
+        System.out.println("createAlarm");
         alarmService.createNewAlarm(alarmResDTO.getApprovalDocId(), alarmResDTO.getReceiverId(), alarmResDTO.getAlarmCode());
     }
 
