@@ -20,6 +20,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/alarm/ws")
                 .setAllowedOrigins("http://localhost:3000", "https://simple-sign-frontend-orpin.vercel.app","ws://localhost:3000","ws://simple-sign-frontend-orpin.vercel.app", "wss://simple-sign-frontend-orpin.vercel.app")
-                .withSockJS();
+                .withSockJS()
+                .setClientLibraryUrl("https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.2/sockjs.js");
     }
 }
