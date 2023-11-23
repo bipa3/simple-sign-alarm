@@ -25,26 +25,27 @@ public class AlarmController {
     @Autowired
     private AlarmService alarmService;
 
-    @Autowired
-    private RedisService redisService;
+//    @Autowired
+//    private RedisService redisService;
 
-    public int getOrgUserId(HttpServletRequest request){
-//        int authorityCode = (SessionUtils.getAttribute("authorityCode") != null) ? (int) SessionUtils.getAttribute("authorityCode") : 3;
-        List<String> cookieHeaderValues = Collections.list(request.getHeaders("Cookie"))
-                .stream()
-                .flatMap(cookieHeader -> Arrays.stream(cookieHeader.split(";")))
-                .map(String::trim)
-                .collect(Collectors.toList());
-
-        String JSESSIONID = "";
-        for(String value: cookieHeaderValues) {
-            if(value.contains("JSESSIONID")) {
-                 JSESSIONID = value.substring(value.indexOf("=")+1);
-            }
-        }
-        Object orgUserId1 = redisService.getValueFromHash(JSESSIONID, "orgUserId");
-        return Integer.parseInt((String) orgUserId1);
-    }
+//    public int getOrgUserId(HttpServletRequest request){
+////        int authorityCode = (SessionUtils.getAttribute("authorityCode") != null) ? (int) SessionUtils.getAttribute("authorityCode") : 3;
+//        List<String> cookieHeaderValues = Collections.list(request.getHeaders("Cookie"))
+//                .stream()
+//                .flatMap(cookieHeader -> Arrays.stream(cookieHeader.split(";")))
+//                .map(String::trim)
+//                .collect(Collectors.toList());
+//
+//        String JSESSIONID = "";
+//        for(String value: cookieHeaderValues) {
+//            if(value.contains("JSESSIONID")) {
+//                 JSESSIONID = value.substring(value.indexOf("=")+1);
+//            }
+//        }
+//        Object orgUserId1 = redisService.getValueFromHash(JSESSIONID, "orgUserId");
+//        System.out.println("JSESSIONID" + orgUserId1);
+//        return Integer.parseInt((String) orgUserId1);
+//    }
 
     @PostMapping("/createNewAlarm")
     public void createNewAlarm(@RequestBody AlarmResDTO alarmResDTO){
@@ -53,15 +54,19 @@ public class AlarmController {
 
     @GetMapping("/")
     public List<AlarmDTO> getAlarm(HttpServletRequest request){
-        //int orgUserId = (int) SessionUtils.getAttribute("orgUserId");
-        int orgUserId = this.getOrgUserId(request);
+        int orgUserId = (int) SessionUtils.getAttribute("orgUserId");
+        System.out.println("SESSIOUTILS:  " + orgUserId);
+        //int orgUserId = this.getOrgUserId(request);
         List<AlarmDTO> alarmDTO = alarmService.selectAlarm(orgUserId);
         return alarmDTO;
     }
 
     @GetMapping("/count")
-    public int alarmCount(HttpServletRequest request){
-        int orgUserId = this.getOrgUserId(request);
+    public int alarmCount(HttpSession session){
+        //int orgUserId = (int) SessionUtils.getAttribute("orgUserId");
+        //int orgUserId = this.getOrgUserId(request);
+        int orgUserId = (int) session.getAttribute("orgUserId");
+        System.out.println("redisSession?: " + orgUserId);
         return alarmService.alarmCount(orgUserId);
     }
 
