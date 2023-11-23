@@ -48,7 +48,6 @@ public class AlarmController {
 
     @PostMapping("/createNewAlarm")
     public void createNewAlarm(@RequestBody AlarmResDTO alarmResDTO){
-        System.out.println("createAlarm");
         alarmService.createNewAlarm(alarmResDTO.getApprovalDocId(), alarmResDTO.getReceiverId(), alarmResDTO.getAlarmCode());
     }
 
@@ -71,14 +70,10 @@ public class AlarmController {
         return alarmService.updateConfirmationStatus(alarmId);
     }
 
-    @DeleteMapping("/alarm/delete/{alarmId}")
+    @DeleteMapping("/delete/{alarmId}")
     public void deleteAlarm(@PathVariable int alarmId){
         alarmService.deleteAlarm(alarmId);
     }
-
-
-
-
 
 }
 

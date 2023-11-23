@@ -20,7 +20,6 @@ public class SessionUtils {
     }
 
     public static Object getAttribute(String name){
-        System.out.println("SessionUtils : " + RequestContextHolder.getRequestAttributes().getSessionId());
         return RequestContextHolder.getRequestAttributes().getAttribute(name,RequestAttributes.SCOPE_SESSION);
     }
 

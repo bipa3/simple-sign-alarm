@@ -5,7 +5,10 @@ import bitedu.bipa.simplesignalarm.dao.CommonDAO;
 import bitedu.bipa.simplesignalarm.model.dto.*;
 import bitedu.bipa.simplesignalarm.validation.CustomErrorCode;
 import bitedu.bipa.simplesignalarm.validation.RestApiException;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +31,11 @@ public class AlarmService {
         this.messagingTemplate = messagingTemplate;
     }
 
+
+    @KafkaListener(topics = "alarmTopic", groupId = "group-id-alarm")
+    public void getAlarm(@Payload ApprovalEvent alarmResDTO) {
+      this.createNewAlarm(alarmResDTO.getApprovalDocId(), alarmResDTO.getReceiverId(),alarmResDTO.getAlarmCode());
+    }
     @Transactional
     public void createNewAlarm(int approvalDocId, int orgUserId, String alarmCode) {
         PositionAndGradeDTO positionAndGradeDTO = commonDAO.getPositionAndGrade(orgUserId);
@@ -47,7 +55,12 @@ public class AlarmService {
             try {
                 this.sendMeassge(alarmReqDTO);
             }catch (Exception e) {
-                System.out.println(e);
+                try{
+                    this.insertFileAlarm(alarmReqDTO);
+                }catch (Exception err) {
+                    System.out.println(err);
+                }
+
             }
         }else{
             throw  new RestApiException(CustomErrorCode.ALARM_INSERT_FAIL);
@@ -55,7 +68,7 @@ public class AlarmService {
     }
 
     @Transactional(propagation= Propagation.REQUIRES_NEW)
-    public void sendMeassge(AlarmReqDTO alarmReqDTO){
+    public boolean sendMeassge(AlarmReqDTO alarmReqDTO){
         LocalDateTime alarmDate = alarmReqDTO.getAlarmDate();
         alarmDate = alarmDate.truncatedTo(ChronoUnit.SECONDS);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -76,6 +89,41 @@ public class AlarmService {
         }
 
         messagingTemplate.convertAndSend("/topic/alarm/" + alarmReqDTO.getOrgUserId(), alarmDTO);
+
+        return true;
+    }
+
+    // 실패 한 알림 db에 저장
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+        public void insertFileAlarm(AlarmReqDTO alarmReqDTO){
+        LocalDateTime alarmDate = alarmReqDTO.getAlarmDate();
+        alarmDate = alarmDate.truncatedTo(ChronoUnit.SECONDS);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedDate = alarmDate.format(formatter);
+
+        AlarmFailDTO alarmFailDTO = new AlarmFailDTO();
+        alarmFailDTO.setAlarmDate(formattedDate);
+        alarmFailDTO.setAlarmCode(alarmReqDTO.getAlarmCode());
+        alarmFailDTO.setOrgUserId(alarmReqDTO.getOrgUserId());
+        alarmFailDTO.setApprovalDocId(alarmReqDTO.getApprovalDocId());
+        alarmFailDTO.setAlarmContent(alarmReqDTO.getAlarmContent());
+        alarmDAO.failAlarmInsert(alarmFailDTO);
+    }
+
+    // 스케줄링을 이용하여 실패한 알림을 주기적으로 보냄
+    @Scheduled(fixedDelay = 60000)
+    public void retryFailAlarm(){
+        // 알림 실패 테이블에서 값을 들고옴
+        List<AlarmReqDTO> failAlarm = alarmDAO.failAlarmSelect();
+        for (AlarmReqDTO alarmReqDTO : failAlarm){
+            boolean flag = this.sendMeassge(alarmReqDTO);
+            if(flag){
+                // 성공하면 삭제함
+                int failId = alarmDAO.failId(String.valueOf(alarmReqDTO.getAlarmDate()),alarmReqDTO.getOrgUserId(), alarmReqDTO.getAlarmCode(), alarmReqDTO.getApprovalDocId());
+                alarmDAO.deleteFailAlarm(failId);
+            }
+        }
+
     }
 
     // 전체 알림을 들고오는 부분
@@ -90,6 +138,8 @@ public class AlarmService {
             if(userName != null) {
                 alarmDTO.setUserName(userName);
             }
+            // 전체 알림을 들고 올 때는 이미 모든 알림을 들고오니 실패된 알림 테이블을 삭제한다.
+            alarmDAO.deleteFailAlarmAll(orgUserId);
         }
         return alarmDTOList;
     }
@@ -112,5 +162,4 @@ public class AlarmService {
             alarmDAO.deleteAlarm(alarmDeleteDTO.getAlarmId());
         }
     }
-
 }

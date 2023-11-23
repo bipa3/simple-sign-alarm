@@ -23,7 +23,7 @@
         from alarm_history h
         join approval_doc d on h.approval_doc_id = d.approval_doc_id
         where h.org_user_id = #{orgUserId}
-        order by h.alarm_date desc;
+        order by h.alarm_id desc;
     </select>
 
     <!-- 문서명 들고 오기 -->
@@ -71,4 +71,32 @@
         delete from alarm_history where alarm_id = #{alarmId};
     </delete>
 
+    <!-- 실패한 알림 db에 넣기 -->
+    <insert id="failAlarmInsert" parameterType="AlarmFailDTO">
+        insert into alarm_fail
+        (alarm_date, confirmation_status, alarm_code, org_user_id, approval_doc_id, alarm_content)
+        values(#{alarmDate}, 0, #{alarmCode}, #{orgUserId}, #{approvalDocId}, #{alarmContent});
+    </insert>
+
+    <!-- 실패한 알림 들고오기 -->
+    <select id="failAlarmSelect" resultType="AlarmReqDTO">
+        select alarm_date, alarm_code, org_user_id, approval_doc_id, alarm_content from alarm_fail;
+    </select>
+
+    <!-- 실패 알림 아이디 -->
+    <select id="failId" resultType="int">
+        select fail_id from alarm_fail
+        where alarm_date = #{alarmDate} and org_user_id = #{orgUserId}
+        and alarm_code = #{alarmCode} and approval_doc_id = #{approvalDocId};
+    </select>
+
+    <!-- 실패 알림 삭제 -->
+    <delete id="deleteFailAlarm" parameterType="int">
+        delete from alarm_fail where fail_id = #{failId};
+    </delete>
+
+    <!-- 실패 알림 전체 삭제 -->
+    <delete id="deleteFailAlarmAll">
+        delete from alarm_fail where org_user_id = #{orgUserId};
+    </delete>
 </mapper>

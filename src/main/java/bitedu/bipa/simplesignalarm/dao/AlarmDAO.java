@@ -1,10 +1,7 @@
 package bitedu.bipa.simplesignalarm.dao;
 
 import bitedu.bipa.simplesignalarm.mapper.AlarmMapper;
-import bitedu.bipa.simplesignalarm.model.dto.AlarmDTO;
-import bitedu.bipa.simplesignalarm.model.dto.AlarmDeleteDTO;
-import bitedu.bipa.simplesignalarm.model.dto.AlarmReqDTO;
-import bitedu.bipa.simplesignalarm.model.dto.UserApprovalDTO;
+import bitedu.bipa.simplesignalarm.model.dto.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -61,4 +58,27 @@ public class AlarmDAO {
         alarmMapper.deleteAlarm(alarmId);
     }
 
+    // 실패 알림 테이블에 넣기
+    public void failAlarmInsert(AlarmFailDTO alarmFailDTO){
+        alarmMapper.failAlarmInsert(alarmFailDTO);
+    }
+
+    public List<AlarmReqDTO> failAlarmSelect(){
+        return alarmMapper.failAlarmSelect();
+    }
+
+    // 실패 알림 아이디
+    public int failId(String alarmDate, int orgUserId, String alarmCode, int approvalDocId){
+        return alarmMapper.failId(alarmDate, orgUserId, alarmCode, approvalDocId);
+    }
+
+    // 실패 알림 삭제하기
+    public void deleteFailAlarm(int failId){
+        alarmMapper.deleteFailAlarm(failId);
+    }
+
+    // 실패 알림 전체 삭제
+    public void deleteFailAlarmAll(int orgUserId){
+        alarmMapper.deleteFailAlarmAll(orgUserId);
+    }
 }

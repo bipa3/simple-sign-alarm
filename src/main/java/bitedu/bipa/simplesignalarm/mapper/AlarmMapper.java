@@ -1,9 +1,6 @@
 package bitedu.bipa.simplesignalarm.mapper;
 
-import bitedu.bipa.simplesignalarm.model.dto.AlarmDTO;
-import bitedu.bipa.simplesignalarm.model.dto.AlarmDeleteDTO;
-import bitedu.bipa.simplesignalarm.model.dto.AlarmReqDTO;
-import bitedu.bipa.simplesignalarm.model.dto.UserApprovalDTO;
+import bitedu.bipa.simplesignalarm.model.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -38,4 +35,18 @@ public interface AlarmMapper {
     boolean insertAlarmDelete(AlarmDeleteDTO alarmDeleteDTO);
     void deleteAlarm(int alarmId);
 
+    // 실패한 알림 테이블에 넣기
+    void failAlarmInsert(AlarmFailDTO alarmFailDTO);
+
+    List<AlarmReqDTO> failAlarmSelect();
+
+    // 실패 알림 아이디
+    int failId(@Param("alarmDate") String alarmDate, @Param("orgUserId") int orgUserId,
+                    @Param("alarmCode") String alarmCode, @Param("approvalDocId") int approvalDocId);
+
+    // 실패 알림 삭제
+    void deleteFailAlarm(int failId);
+
+    // 실패 알림 전체 삭제
+    void deleteFailAlarmAll(int orgUserId);
 }

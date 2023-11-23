@@ -15,7 +15,6 @@ public class CommonDAO {
     }
 
     public PositionAndGradeDTO getPositionAndGrade(int userId) {
-        System.out.println(commonMapper.getPositionAndGrade(userId));
         return commonMapper.getPositionAndGrade(userId);
     }
 }
