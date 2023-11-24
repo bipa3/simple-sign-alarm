@@ -53,20 +53,15 @@ public class AlarmController {
     }
 
     @GetMapping("/")
-    public List<AlarmDTO> getAlarm(HttpServletRequest request){
+    public List<AlarmDTO> getAlarm(){
         int orgUserId = (int) SessionUtils.getAttribute("orgUserId");
-        System.out.println("SESSIOUTILS:  " + orgUserId);
-        //int orgUserId = this.getOrgUserId(request);
         List<AlarmDTO> alarmDTO = alarmService.selectAlarm(orgUserId);
         return alarmDTO;
     }
 
     @GetMapping("/count")
     public int alarmCount(HttpSession session){
-        //int orgUserId = (int) SessionUtils.getAttribute("orgUserId");
-        //int orgUserId = this.getOrgUserId(request);
         int orgUserId = (int) session.getAttribute("orgUserId");
-        System.out.println("redisSession?: " + orgUserId);
         return alarmService.alarmCount(orgUserId);
     }
 
