@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -42,7 +43,7 @@ public class AlarmService {
         PositionAndGradeDTO positionAndGradeDTO = commonDAO.getPositionAndGrade(orgUserId);
         AlarmReqDTO alarmReqDTO = new AlarmReqDTO();
         alarmReqDTO.setAlarmCode(alarmCode);
-        alarmReqDTO.setAlarmDate(LocalDateTime.now());
+        alarmReqDTO.setAlarmDate(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         alarmReqDTO.setOrgUserId(orgUserId);
         alarmReqDTO.setApproverId(approverId);
         alarmReqDTO.setGradeName(positionAndGradeDTO.getGradeName());
