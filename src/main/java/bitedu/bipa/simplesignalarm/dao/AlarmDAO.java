@@ -33,8 +33,8 @@ public class AlarmDAO {
     }
 
     // 실시간 결재자 들고오기
-    public String selectApprovalUser(int approvalDocId){
-        return alarmMapper.selectApprovalUser(approvalDocId);
+    public String selectApprovalUser(int alarmId){
+        return alarmMapper.selectApprovalUser(alarmId);
     }
 
     // 안읽은 알림 총 갯수

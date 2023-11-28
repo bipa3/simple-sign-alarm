@@ -36,16 +36,11 @@
 
     <!-- 실시간 결재자 -->
     <select id="selectApprovalUser" parameterType="int" resultType="String">
-        SELECT u.user_name FROM approval a
-        JOIN (
-        SELECT approval_doc_id, MAX(approval_order) AS max_approval_order
-        FROM approval
-        WHERE approval_status = 'A' AND approval_doc_id = #{approvalDocId}
-        GROUP BY approval_doc_id
-        ) AS max_a ON a.approval_doc_id = max_a.approval_doc_id AND a.approval_order = max_a.max_approval_order
-        JOIN organization_user o ON o.org_user_id = a.org_user_id
-        JOIN user u ON u.user_id = o.user_id
-        WHERE a.approval_status = 'A' AND a.approval_doc_id = #{approvalDocId};
+        select u.user_name from alarm_history h
+        join organization_user o on o.org_user_id = h.approver_id
+        join user u on u.user_id = o.user_id
+        where h.alarm_id = #{alarmId}
+        order by h.alarm_id desc;
     </select>
 
     <!-- 안 읽은 알림 갯수 구하기 -->

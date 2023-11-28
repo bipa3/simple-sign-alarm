@@ -22,7 +22,7 @@ public interface AlarmMapper {
                                            @Param("alarmCode") String alarmCode, @Param("approvalDocId") int approvalDocId);
 
     // 실시간 결재자
-    String selectApprovalUser(int approvalDocId);
+    String selectApprovalUser(int alarmId);
 
     // 안읽은 알림 총 갯수
     int AlarmCount(int orgUserId);
