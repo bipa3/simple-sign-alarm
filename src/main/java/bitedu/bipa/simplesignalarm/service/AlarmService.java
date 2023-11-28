@@ -86,7 +86,7 @@ public class AlarmService {
         alarmDTO.setAlarmId(userApprovalDto.getAlarmId());
 
         // 실시간 결재자를 들고옴
-        String userName = alarmDAO.selectApprovalUser(alarmDTO.getApprovalDocId());
+        String userName = alarmDAO.selectApprovalUser(alarmDTO.getAlarmId());
         if(userName != null) {
             alarmDTO.setUserName(userName);
         }
@@ -135,8 +135,8 @@ public class AlarmService {
         List<AlarmDTO> alarmDTOList = alarmDAO.selectAlarm(orgUserId);
 
         for(AlarmDTO alarmDTO : alarmDTOList) {
-            int approvalDocId = alarmDTO.getApprovalDocId();
-            String userName = alarmDAO.selectApprovalUser(approvalDocId);
+            int alarmId = alarmDTO.getAlarmId();
+            String userName = alarmDAO.selectApprovalUser(alarmId);
 
             if(userName != null) {
                 alarmDTO.setUserName(userName);
