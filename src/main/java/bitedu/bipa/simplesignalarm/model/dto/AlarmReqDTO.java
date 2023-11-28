@@ -13,4 +13,6 @@ public class AlarmReqDTO {
     private String positionName;
     private String gradeName;
     private String alarmContent;
+    private int approverId;
 }
+

@@ -8,8 +8,8 @@
     <!--알림삽입-->
     <insert id="insertAlarm" parameterType="AlarmReqDTO">
         insert into alarm_history
-        (alarm_date, confirmation_status, alarm_code, org_user_id, approval_doc_id, position_name, grade_name, alarm_content)
-        values(#{alarmDate}, 0, #{alarmCode}, #{orgUserId},  #{approvalDocId}, #{positionName}, #{gradeName},#{alarmContent});
+        (alarm_date, confirmation_status, alarm_code, org_user_id, approval_doc_id, position_name, grade_name, alarm_content, approver_id)
+        values(#{alarmDate}, 0, #{alarmCode}, #{orgUserId},  #{approvalDocId}, #{positionName}, #{gradeName},#{alarmContent}, #{approverId});
     </insert>
 
     <select id="selectDefaultMessage" parameterType="String">

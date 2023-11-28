@@ -25,32 +25,11 @@ public class AlarmController {
     @Autowired
     private AlarmService alarmService;
 
-//    @Autowired
-//    private RedisService redisService;
 
-//    public int getOrgUserId(HttpServletRequest request){
-////        int authorityCode = (SessionUtils.getAttribute("authorityCode") != null) ? (int) SessionUtils.getAttribute("authorityCode") : 3;
-//        List<String> cookieHeaderValues = Collections.list(request.getHeaders("Cookie"))
-//                .stream()
-//                .flatMap(cookieHeader -> Arrays.stream(cookieHeader.split(";")))
-//                .map(String::trim)
-//                .collect(Collectors.toList());
-//
-//        String JSESSIONID = "";
-//        for(String value: cookieHeaderValues) {
-//            if(value.contains("JSESSIONID")) {
-//                 JSESSIONID = value.substring(value.indexOf("=")+1);
-//            }
-//        }
-//        Object orgUserId1 = redisService.getValueFromHash(JSESSIONID, "orgUserId");
-//        System.out.println("JSESSIONID" + orgUserId1);
-//        return Integer.parseInt((String) orgUserId1);
+//    @PostMapping("/createNewAlarm")
+//    public void createNewAlarm(@RequestBody AlarmResDTO alarmResDTO){
+//        alarmService.createNewAlarm(alarmResDTO.getApprovalDocId(), alarmResDTO.getReceiverId(), alarmResDTO.getAlarmCode(), alarmResDTO.ge);
 //    }
-
-    @PostMapping("/createNewAlarm")
-    public void createNewAlarm(@RequestBody AlarmResDTO alarmResDTO){
-        alarmService.createNewAlarm(alarmResDTO.getApprovalDocId(), alarmResDTO.getReceiverId(), alarmResDTO.getAlarmCode());
-    }
 
     @GetMapping("/")
     public List<AlarmDTO> getAlarm(){
