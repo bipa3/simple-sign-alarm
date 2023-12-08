@@ -35,18 +35,8 @@ public interface AlarmMapper {
     boolean insertAlarmDelete(AlarmDeleteDTO alarmDeleteDTO);
     void deleteAlarm(int alarmId);
 
-    // 실패한 알림 테이블에 넣기
-    void failAlarmInsert(AlarmFailDTO alarmFailDTO);
-
-    List<AlarmReqDTO> failAlarmSelect();
-
-    // 실패 알림 아이디
-    int failId(@Param("alarmDate") String alarmDate, @Param("orgUserId") int orgUserId,
-                    @Param("alarmCode") String alarmCode, @Param("approvalDocId") int approvalDocId);
-
-    // 실패 알림 삭제
-    void deleteFailAlarm(int failId);
-
-    // 실패 알림 전체 삭제
-    void deleteFailAlarmAll(int orgUserId);
+    // 마지막 알림 아이디
+    int maxAlarmId(int orgUserId);
+    // 유실된 알림 재전송
+    List<AlarmReqDTO> selectFailAlarm(@Param("orgUserId") int orgUserId, @Param("alarmId") int alarmId);
 }

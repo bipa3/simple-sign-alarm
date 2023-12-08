@@ -58,27 +58,12 @@ public class AlarmDAO {
         alarmMapper.deleteAlarm(alarmId);
     }
 
-    // 실패 알림 테이블에 넣기
-    public void failAlarmInsert(AlarmFailDTO alarmFailDTO){
-        alarmMapper.failAlarmInsert(alarmFailDTO);
+    // 마지막 알림 아이디
+    public int maxAlarmId(int orgUserId){
+        return alarmMapper.maxAlarmId(orgUserId);
     }
-
-    public List<AlarmReqDTO> failAlarmSelect(){
-        return alarmMapper.failAlarmSelect();
-    }
-
-    // 실패 알림 아이디
-    public int failId(String alarmDate, int orgUserId, String alarmCode, int approvalDocId){
-        return alarmMapper.failId(alarmDate, orgUserId, alarmCode, approvalDocId);
-    }
-
-    // 실패 알림 삭제하기
-    public void deleteFailAlarm(int failId){
-        alarmMapper.deleteFailAlarm(failId);
-    }
-
-    // 실패 알림 전체 삭제
-    public void deleteFailAlarmAll(int orgUserId){
-        alarmMapper.deleteFailAlarmAll(orgUserId);
+    // 유실된 알림 재전송
+    public List<AlarmReqDTO> selectFailAlarm(int orgUserId, int alarmId){
+        return alarmMapper.selectFailAlarm(orgUserId, alarmId);
     }
 }
